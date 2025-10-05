@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice Chat</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; text-align: center; padding: 30px; }
+    button { margin: 20px; padding: 12px 24px; border: none; background: #28a745; color: white; border-radius: 8px; cursor: pointer; }
+    button:hover { background: #218838; }
+    .chat-box { background: white; border-radius: 10px; padding: 15px; width: 70%; margin: auto; max-height: 400px; overflow-y: auto; text-align: left; }
+    .user { color: #007bff; }
+    .bot { color: #333; }
+  </style>
+</head>
+<body>
+  <h2>🎤 Talk to Your Bot</h2>
+  <button id="voice-btn">🎙️ Start Talking</button>
+  <button onclick="location.href='/'">⬅️ Back to Text Chat</button>
+
+  <div class="chat-box" id="chat-box"></div>
+
+  <script>
+    const voiceBtn = document.getElementById('voice-btn');
+    const chatBox = document.getElementById('chat-box');
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    function speakText(text) {
+    const speech = new SpeechSynthesisUtterance(
+        text.replace(/<[^>]*>/g, '') // removes all HTML tags (like <br>, <b>, etc.)
+            .replace(/&nbsp;/g, ' ')
+            .replace(/•/g, 'bullet point')
+            .replace(/–/g, '-') // normalize dashes
+    );
+    speech.rate = 1.0; // normal speed
+    speech.pitch = 1.1; // slightly warm tone
+    speech.lang = "en-IN"; // Indian English voice (or change to "en-US", "en-GB")
+    speechSynthesis.speak(speech);
+}
+
+    voiceBtn.onclick = () => {
+      recognition.start();
+      voiceBtn.innerText = "🎧 Listening...";
+    };
+
+    recognition.onresult = async (event) => {
+      const userMessage = event.results[0][0].transcript;
+      chatBox.innerHTML += `<p class='user'><b>You:</b> ${userMessage}</p>`;
+
+      const res = await fetch("/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      const data = await res.json();
+      const botReply = data.response || "Sorry, I didn’t catch that.";
+      chatBox.innerHTML += `<p class='bot'><b>Bot:</b> ${botReply}</p>`;
+      speakText(botReply);
+      voiceBtn.innerText = "🎙️ Start Talking";
+    };
+
+    recognition.onerror = (e) => {
+      console.error(e);
+      voiceBtn.innerText = "🎙️ Start Talking";
+    };
+  </script>
+</body>
+</html>

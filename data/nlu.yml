@@ -1,0 +1,178 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: emergency_contact
+  examples: |
+    - I need [medical](emergency_type) help
+    - I need help, it's [medical](emergency_type)
+    - Emergency! Call [security](emergency_type)
+    - Please connect me to [security](emergency_type)
+    - Can I get the [ambulance](emergency_type) number?
+    - I need an [ambulance](emergency_type) quickly
+    - What's the contact for [fire](emergency_type) services?
+    - There is a [fire](emergency_type), help!
+    - Emergency contact please
+    - Who do I call in case of emergency?
+    - Contact the [medical](emergency_type) center
+    - Give me the [security](emergency_type) helpline
+    - Call [fire](emergency_type) department now
+
+- intent: get_directions
+  examples: |
+    - How do I reach [DA](location)?
+    - Directions to [DA](location) girls hostel
+    - Where is [DA](location) hostel located?
+    - Show me the way to [DA](location)
+    - How to reach girls hostel?
+    - How do I get to [CVR](location)?
+    - I want to go to [APJ](location) boys hostel
+    - Directions to [VSB](location)
+    - Where is [CVR](location) hostel?
+    - How to reach boys hostel?
+    - How do I reach [HJB](location)?
+    - Show me the way to [JPN](location)
+    - Where is [HJB](location) hostel?
+    - Directions to [JPN](location) hostel
+    - Where are Phd student hostels
+    - Where is [Kshipra Complex](location)?
+    - Directions to [Kshipra Complex](location) faculty houses
+    - How do I reach [Kshipra Complex](location)?
+    - Show me the way to [Kshipra Complex](location)
+    - How to go to [LHC](location)?
+    - Directions to [Nalanda Auditorium](location)
+    - Where is [Nalanda Auditorium](location)?
+    - Show me the way to [LHC](location)
+    - Directions to [POD A](location)
+    - How do I get to [POD B](location)?
+    - Where is [POD C](location)?
+    - Show me the way to [POD D](location)
+    - How to reach [POD E](location)
+    - Directions to [Abhinandan Bhavan](location)
+    - How do I reach [Abhinandan Bhavan](location)?
+    - Where is [Abhinandan Bhavan](location)?
+    - How do I get to [Central Dining Facility](location)?
+    - Directions to mess at [Central Dining Facility](location)
+    - Where is the mess located?
+    - How do I reach [Health Centre](location)?
+    - Where is the campus [Health Centre](location)?
+    - Directions to [Health Centre](location)
+    - Where is [Dominos](location)?
+    - Directions to [Nescafe](location)
+    - How to reach [AS Canteen](location)?
+    - Show me the way to [Village Cafe](location)
+    - Directions to [Amul](location)
+    - Where is [Jucilous](location)?
+    - How do I reach [Yewale](location)?
+    - Where are the [PhD](hostel_type) hostels?
+    - How can I reach [boys](hostel_type) hostels?
+    - Show me the way to [girls](hostel_type) hostels
+    - I want directions to [MTech](hostel_type) hostels
+    - List all [boys](hostel_type) hostels
+    - Where can I find [girls](hostel_type) hostels?
+    - Where is [academic office](hostel_type)?
+    - Where is [hospital](hostel_type)
+
+- intent: get_events
+  examples: |
+    - what are the events in iit indore 
+    - [Latest](time) events going to happen
+    - List [all](time) the events that happen in iit indore
+    - Give some campus events that happen every year 
+
+- intent: iit_indore
+  examples: |
+    - How much distance is iit indore from [bus](transport_type) station?
+    - How much far away is iit indore from [railway](transport_type) station.
+    - Whats the distance between iit indore and [airport](transport_type).
+
+
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: mood_great
+  examples: |
+    - perfect
+    - great
+    - amazing
+    - feeling like a king
+    - wonderful
+    - I am feeling very good
+    - I am great
+    - I am amazing
+    - I am going to save the world
+    - super stoked
+    - extremely good
+    - so so perfect
+    - so good
+    - so perfect
+
+- intent: mood_unhappy
+  examples: |
+    - my day was horrible
+    - I am sad
+    - I don't feel very well
+    - I am disappointed
+    - super sad
+    - I'm so sad
+    - sad
+    - very sad
+    - unhappy
+    - not good
+    - not very good
+    - extremly sad
+    - so saad
+    - so sad
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+    
+

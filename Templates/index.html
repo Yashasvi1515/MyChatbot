@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rasa & Flask Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+        /* Background gradient animation */
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff416c, #ff4b2b);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Welcome title */
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Chat widget button */
+        .chat-sign-button {
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Chat widget */
+        #chat-widget {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        #chat-widget-messages {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    height: 350px;
+    scrollbar-width: thin;
+}
+
+        /* Message bubbles */
+       .bot-message, .user-message {
+    white-space: pre-line; /* preserves line breaks */
+    word-wrap: break-word;
+}
+
+.bot-message {
+    background: linear-gradient(135deg, #f1f1f1, #e2e2e2);
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 14px;
+    margin: 6px 0;
+    font-size: 15px;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.user-message {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 14px;
+    margin: 6px 0;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.bot-message, .user-message {
+    animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+    </style>
+</head>
+<body>
+   <div>
+       <h1> Welcome to my chatbot</h1>
+       <button id="chat-widget-button" type="button" class="btn btn-primary rounded-circle position-fixed chat-sign-button" style="bottom:20px;right:20px;"></button>
+       <div id="chat-widget" class="card position-fixed shadow d-none" style="bottom: 100px; right: 20px; width: 300px;">
+    <div class="card-header bg-primary text-white">
+        Chatbot
+        <button id="chat-widget-close-button" type="button" class="btn-close float-end" aria-label="Close"></button>
+    </div>
+    <div class="card-body" id="chat-widget-messages"></div>
+    <div class="card-footer">
+        <input type="text" class="form-control" id="chat-widget-input" placeholder="Type your message...">
+    </div>
+            <button onclick="location.href='/voice'">🎙️ Switch to Voice Chat</button>
+   </div>
+   </div>
+<script>
+    $(document).ready(function(){
+        // Toggle widget
+        $("#chat-widget-button").on("click",function(){
+            $("#chat-widget").toggleClass("d-none")
+        });
+
+        // Close widget
+        $("#chat-widget-close-button").on("click",function(){
+           $("#chat-widget").addClass("d-none")
+        });
+
+        // Handle message send
+        $("#chat-widget-input").keypress(function(event){
+           if(event.which === 13){
+             let userMessage=$("#chat-widget-input").val();
+             $("#chat-widget-input").val("")
+
+             // Append user message
+             $("#chat-widget-messages").append("<div class='user-message'>" + userMessage +"</div>");
+             $("#chat-widget-messages").scrollTop($("#chat-widget-messages")[0].scrollHeight);
+
+             // Send to server
+             $.ajax({
+                type: "POST",
+                url: "/webhook",
+                contentType: "application/json",
+                data: JSON.stringify({ message: userMessage }),
+                success: function(data) {
+                    let botResponse = data.response;
+                    $("#chat-widget-messages").append("<div class='bot-message'>" + botResponse + "</div>");
+                    $("#chat-widget-messages").scrollTop($("#chat-widget-messages")[0].scrollHeight);
+                },
+                error: function() {
+                    $("#chat-widget-messages").append("<div class='bot-message text-danger'>Bot server is not available.</div>");
+                    $("#chat-widget-messages").scrollTop($("#chat-widget-messages")[0].scrollHeight);
+                }
+             });
+           }
+        });
+    });
+</script>
+</body>
+</html>
