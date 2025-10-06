@@ -3,6 +3,7 @@ import requests
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+from rasa_sdk.events import SlotSet
 
 class ActionHelloWorld(Action):
 
@@ -160,13 +161,13 @@ class ActionFetchEvents(Action):
                 dispatcher.utter_message(text="No upcoming events found.")
                 return []
 
-            if time_entity == "Latest":
+            if time_entity == "Latest Events happening in IIT Indore are:":
                 # Pick only the first/upcoming event
                 event = events[0]
                 message = f"📅 Latest Event:\n{event['title']} on {event['date']} at {event['time']} at {event['location']}"
             else:
                 # List all events
-                message = "📅 Upcoming Events:\n"
+                message = "📅 Upcoming Events happening in IIT Indore are:\n"
                 for event in events:
                     message += f"- {event['title']} on {event['date']} at {event['time']} at {event['location']}\n"
 
@@ -215,5 +216,67 @@ class ActionDistance(Action):
 
         return []
 
+class ActionAskFeedback(Action):
+    def name(self):
+        return "action_ask_feedback"
+
+    def run(self, dispatcher, tracker, domain):
+        dispatcher.utter_message(text="Sure! Please share your feedback.")
+        return [SlotSet("waiting_for_feedback", True)]
+
+
+class ActionSaveFeedback(Action):
+    def name(self):
+        return "action_save_feedback"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        feedback_text = tracker.latest_message.get("text")
+        user_id = tracker.sender_id   # Optional if no authentication
+
+        try:
+            response = requests.post(
+                "http://localhost:5000/api/feedback",
+                json={"feedback": feedback_text, "user_id": user_id}
+            )
+
+            if response.status_code == 200:
+                dispatcher.utter_message(text="✅ Thanks for your feedback! We appreciate your input.")
+            else:
+                dispatcher.utter_message(text="❌ Sorry, I couldn’t record your feedback right now.")
+        except Exception as e:
+            dispatcher.utter_message(text=f"⚠️ Error connecting to feedback server: {e}")
+
+        return [SlotSet("waiting_for_feedback", False)]
+
+
+directions_map = {
+    ("Mess", "DA"): "Exit the mess, turn right, walk straight for 200m, Hostel 1 will be on your left.",
+    ("Mess", "LHC"): "Exit the mess, take the main road straight for 500m, LHC is on your right.",
+    ("Mess", "Health Centre"): "Walk straight from Mess for 300m, then turn left to reach Health Centre.",
+    ("DA", "LHC"): "Exit the Hostel, take the main road straight for 500m, LHC is on your right.",
+    ("Sports Complex", "Mess"): "Exit the Ground, take the main road straight for 500m, LHC is on your right.",
+    ("Health Centre", "Mess"): "Exit the health centre, turn right, walk straight for 200m, Hostel 1 will be on your left.",
+    ("Mess", "APJ"): "Exit the mess, turn right, walk straight for 200m, Hostel 1 will be on your left.",
+}
+
+class ActionProvideDirections(Action):
+
+    def name(self) -> Text:
+        return "action_provide_directions"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        source = tracker.get_slot("source")
+        destination = tracker.get_slot("destination")
+
+        key = (source, destination)
+        if key in directions_map:
+            dispatcher.utter_message(text=directions_map[key])
+        else:
+            dispatcher.utter_message(text=f"Sorry, I don't have directions from {source} to {destination} yet.")
+
+        return []
 
 

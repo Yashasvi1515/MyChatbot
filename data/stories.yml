@@ -29,6 +29,22 @@ stories:
     - intent: iit_indore
     - action: action_get_distance
 
+- story: user wants to give feedback
+  steps:
+    - intent: give_feedback
+    - action: action_ask_feedback
+    - intent: provide_feedback
+    - action: action_save_feedback
+
+- story: user directly gives feedback
+  steps:
+    - intent: provide_feedback
+    - action: action_save_feedback
+
+- story: give directions
+  steps:
+    - intent: each_directions
+    - action: action_provide_directions
 
 - story: sad path 1
   steps:

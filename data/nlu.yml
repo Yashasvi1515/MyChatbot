@@ -114,6 +114,29 @@ nlu:
     - How much far away is iit indore from [railway](transport_type) station.
     - Whats the distance between iit indore and [airport](transport_type).
 
+- intent: give_feedback
+  examples: |
+    - I want to give feedback
+    - I have some suggestions
+    - I’d like to share feedback
+    - Can I give feedback?
+
+- intent: provide_feedback
+  examples: |
+    - I wanted to give a feedback: Mess food is not good
+    - The library is too crowded
+    - WiFi is slow
+    - The transport service is great
+
+- intent: each_directions
+  examples: |
+    - How do I get from [Mess](source) to [DA](destination)?
+    - Directions from [Mess](source) to [LHC](destination)
+    - I want to go from [Health Centre](source) to [Mess](destination)
+    - What is the route from [Mess](source) to [APJ](destination)?
+    - From [DA](source) to [LHC](destination), please guide me
+    - Can you tell me the way from [Mess](source) to [Library](destination)?
+    - How far is [Sports Complex](source) from [Mess](destination)?
 
 - intent: affirm
   examples: |

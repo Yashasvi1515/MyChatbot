@@ -29,17 +29,21 @@
     recognition.interimResults = false;
 
     function speakText(text) {
-    const speech = new SpeechSynthesisUtterance(
-        text.replace(/<[^>]*>/g, '') // removes all HTML tags (like <br>, <b>, etc.)
-            .replace(/&nbsp;/g, ' ')
-            .replace(/•/g, 'bullet point')
-            .replace(/–/g, '-') // normalize dashes
-    );
+    // Remove HTML tags
+    let cleanText = text.replace(/<[^>]*>/g, '')
+                        .replace(/&nbsp;/g, ' ')
+                        .replace(/•/g, 'bullet point')
+                        .replace(/–/g, '-') // normalize dashes
+                        .replace(/🔊/g, 'speaker emoji') // example: replace "🔊" with description
+                        .replace(/https?:\/\/[^\s]+/g, 'link'); // replace links with word "link"
+
+    const speech = new SpeechSynthesisUtterance(cleanText);
     speech.rate = 1.0; // normal speed
     speech.pitch = 1.1; // slightly warm tone
-    speech.lang = "en-IN"; // Indian English voice (or change to "en-US", "en-GB")
+    speech.lang = "en-IN"; // Indian English voice
     speechSynthesis.speak(speech);
 }
+
 
     voiceBtn.onclick = () => {
       recognition.start();

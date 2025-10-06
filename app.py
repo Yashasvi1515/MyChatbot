@@ -60,5 +60,34 @@ def get_events():
         print("DB Error:", e)
         return jsonify({"error": "Could not fetch events"}), 500
 
+
+# ---------------------- FEEDBACK ROUTE ----------------------
+@app.route('/api/feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        data = request.get_json()
+        feedback_text = data.get("feedback")
+        user_id = data.get("user_id", None)
+
+        if not feedback_text:
+            return jsonify({"error": "Feedback cannot be empty"}), 400
+
+        conn = psycopg.connect("dbname=mlproject user=postgres password=2023 host=localhost port=5432")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO feedback (user_id, feedback_text) VALUES (%s, %s)",
+            (user_id, feedback_text)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"message": "Thank you for your feedback!"}), 200
+
+    except Exception as e:
+        print("DB Error:", e)
+        return jsonify({"error": "Could not submit feedback"}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -13,6 +13,9 @@ intents:
   - get_events
   - chat_anything
   - iit_indore
+  - give_feedback
+  - provide_feedback
+  - each_directions
 
 entities:
   - emergency_type
@@ -20,10 +23,16 @@ entities:
   - hostel_type
   - time
   - transport_type
+  - source
+  - destination
 
 responses:
   utter_greet:
   - text: "Hey! How are you?"
+  - text: "Hello! How can I help you today?"
+  - text: "Hi there! Nice to see you."
+  - text: "Hey! How's it going?"
+  - text: "Hello! What can I do for you?"
 
   utter_cheer_up:
   - text: "Here is something to cheer you up:"
@@ -41,11 +50,40 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+  utter_ask_feedback:
+  - text: "Sure! Please type your feedback or suggestion."
+
+  utter_feedback_thanks:
+  - text: "Thanks for your feedback! We’ll use it to improve the campus experience. 😊"
+
+slots:
+  waiting_for_feedback:
+    type: bool
+    influence_conversation: false
+    mappings:
+      - type: custom
+  source:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: source
+
+  destination:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: destination
+
 actions:
   - action_emergency_contact
   - action_get_directions
   - action_get_events
   - action_get_distance
+  - action_ask_feedback
+  - action_save_feedback
+  - action_provide_directions
 
 session_config:
   session_expiration_time: 60
